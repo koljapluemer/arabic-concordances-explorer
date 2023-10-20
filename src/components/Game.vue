@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, computed, onMounted } from "vue";
-import { supabase } from "@/lib/supabaseClient";
+// import { supabase } from "@/lib/supabaseClient";
 import { createToaster } from "@meforma/vue-toaster";
 
 const toaster = createToaster({
@@ -38,18 +38,25 @@ if (localStorage.getItem("uid")) {
 
 // EXERCISES IMPORTER FROM BACKEND
 let exercises = [];
-import data from "@/clozes.json";
+// import data from "@/clozes.json";
 
-for (const exercise of data["exercises"]) {
-  exercise.sr = {
-    repetitions: 0,
-    interval: 10,
-    due: Math.floor(new Date().getTime() / 1000),
-  };
-  exercise.practiceBucket = 0;
-  exercise.stats = [];
-  exercises.push(exercise);
-}
+// for (const exercise of data["exercises"]) {
+//   exercise.sr = {
+//     repetitions: 0,
+//     interval: 10,
+//     due: Math.floor(new Date().getTime() / 1000),
+//   };
+//   exercise.practiceBucket = 0;
+//   exercise.stats = [];
+//   exercises.push(exercise);
+// }
+
+import corpusData from "@/corpus1.json";
+const corpusSentences = corpusData["sentences"];
+
+const corpusSentence = ref(null);
+corpusSentence.value =
+  corpusSentences[Math.floor(Math.random() * corpusSentences.length)];
 
 // TODObut, implement: new exercises should be included, and deleted should be deleted
 if (localStorage.getItem("exercises")) {
@@ -191,18 +198,18 @@ function handleAnswer(rating) {
 }
 
 async function sendDataToBackend(statsObj) {
-  try {
-    const { data, error } = await supabase
-      .from("learning_data_cloze_sentences")
-      .insert([
-        {
-          user_uid: uid,
-          learning_result: JSON.stringify(statsObj),
-        },
-      ]);
-  } catch (error) {
-    console.error(error);
-  }
+  // try {
+  //   const { data, error } = await supabase
+  //     .from("learning_data_cloze_sentences")
+  //     .insert([
+  //       {
+  //         user_uid: uid,
+  //         learning_result: JSON.stringify(statsObj),
+  //       },
+  //     ]);
+  // } catch (error) {
+  //   console.error(error);
+  // }
 }
 
 function setGameMode(mode) {
@@ -299,162 +306,24 @@ function updateTime() {
     currentTime.value += 1;
   }
 }
+
+function splitSentence(sentence) {
+  return sentence.split(" ");
+}
 </script>
 
 <template>
-  <div v-if="gameMode == 'undetermined'">
-    <div class="flex gap-2 flex-wrap justify-center">
-      <button
-        class="btn btn-primary flex-grow flex flex-col btn-primary"
-        @click="setGameMode('go')"
-      >
-        Start Practice Session
-      </button>
-    </div>
-
-    <div class="">
-      <h2 class="font-bold text-3xl text-center mt-5" v-if="lastScore">
-        You scored: {{ lastScore }} points.
-      </h2>
-      <h2 class="font-bold text-2xl text-center mt-10 mb-4">
-        Personal Highscores
-      </h2>
-      <ol class="list-decimal">
-        <!-- show first 10 highscores -->
-        <li
-          v-for="(highscore, index) in sortedHighscores().slice(0, 10)"
-          :key="index"
-          class="flex gap-4 w-full justify-between"
-        >
-          <span class="font-bold">
-            {{ highscore.score }}
-          </span>
-          <span>
-            <!-- format as 09. Sept 2023, 22:34 -->
-            {{
-              new Date(highscore.date).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            }}
-          </span>
-        </li>
-      </ol>
-    </div>
-  </div>
-
-  <div class="" v-else-if="gameMode == 'go'">
-    <div class="">
-      <h2 class="text-2xl font-bold text-center">{{ score }}</h2>
-    </div>
-    <div class="countdown-timer">
-      <div class="progress-bar">
-        <div class="progress" :style="progressStyle"></div>
-      </div>
-      <p>Time Remaining: {{ Math.round(remainingTime) }}s</p>
-      <!-- <button @click="startTimer" v-if="!timerRunning">Start</button> -->
-      <!-- <button @click="stopTimer" v-if="timerRunning">Stop</button> -->
-    </div>
-
-    <div
-      class="card bg-gray-600 shadow-xl my-4 p-4 flex flex-col justify-start items-center min-w-sm max-w-screen-xl"
-      v-if="exercise"
-      style="min-height: 390px"
-    >
-      <div id="prompt" class="p-2" style="white-space: pre">
-        {{ exercise.prompt }}
-      </div>
-      <div class="mt-2"></div>
-      <div class="p-2"></div>
-
-      <div class="flex w-full">
-        <!-- randomly choose between p1, p2, p3, p4 -->
-        <!-- do this with a modulo 4 operation on the exercise english length -->
-        <div class="flex flex-col items-center">
-          <img
-            src="@/assets/p1.svg"
-            alt="Avatar"
-            class="w-10"
-            v-if="exercise.sentence_en.length % 4 == 0"
-          />
-          <img
-            src="@/assets/p2.svg"
-            alt="Avatar"
-            class="w-10"
-            v-else-if="exercise.sentence_en.length % 4 == 1"
-          />
-          <img
-            src="@/assets/p3.svg"
-            alt="Avatar"
-            class="w-10"
-            v-else-if="exercise.sentence_en.length % 4 == 2"
-          />
-          <img
-            src="@/assets/p4.svg"
-            alt="Avatar"
-            class="w-10"
-            v-else-if="exercise.sentence_en.length % 4 == 3"
-          />
-        </div>
-
-        <div class="chat chat-start flex-grow w-full">
-          <!-- make green if revealed and isCorrect, otherwise if revealed set red -->
-          <div
-            class="chat-bubble w-full"
-            :class="
-              isRevealed
-                ? lastAnswerWasCorrect
-                  ? 'chat-bubble-success'
-                  : 'chat-bubble-error'
-                : 'chat-bubble-primary'
-            "
-          >
-            <small class="mb-4" v-if="isRevealed" style="white-space: pre">{{
-              exercise.transliteration
-            }}</small>
-            <br />
-
-            <span class="text-3xl" v-if="!isRevealed" style="white-space: pre">
-              {{ exercise.question }}
-            </span>
-            <span class="text-3xl" v-else style="white-space: pre">
-              {{ exercise.sentence_ar }}
-            </span>
-            <br />
-            <small> ({{ exercise.sentence_en }}) </small>
-          </div>
-        </div>
-      </div>
-
-      <!-- randomly shuffle order of answer buttons whenever new exercise is picked, using flex reverse -->
-      <div
-        class="card-actions gap-2 mt-6 pt-2"
-        v-if="!isRevealed"
-        :class="isReverseOrder ? 'flex-row-reverse' : 'flex-row'"
-        :key="exercise"
-      >
-        <button class="btn text-3xl" @click="handleAnswer(true)">
-          {{ exercise.correct_answer }}
-        </button>
-        <!-- also allow the user to keypress left and right -->
-        <!-- however, we have to dynamically check whether left is the correct or the wrong answer, since it is randomly shuffled -->
-        <button class="btn text-3xl" @click="handleAnswer(false)">
-          {{ exercise.wrong_answer }}
-        </button>
-      </div>
-      <div class="card-actions gap-2 mt-6 pt-2" v-else>
-        <button class="btn fill-button" @click="getNextExercise">
-          Show Next
-        </button>
+  <div
+    class="card bg-gray-600 shadow-xl my-4 p-4 flex flex-col justify-start items-center min-w-sm max-w-screen-xl"
+    style="min-height: 390px"
+  >
+    <div class="flex gap-2 flex-wrap">
+      <div class="btn" v-for="word in splitSentence(corpusSentence)">
+        {{ word }}
       </div>
     </div>
   </div>
 </template>
-
-
 
 <style scoped>
 .fill-button {

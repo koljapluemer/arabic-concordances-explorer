@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.shine-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.shine-button::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-150%);
+    width: 200%;
+    height: 120%;
+    background: linear-gradient(90deg, transparent 20%, rgba(255, 255, 255, 0.2) 50%, transparent 80%);
+    animation: shine 3s infinite;
+    animation-delay: 2s; /* Delay the animation by 2 seconds */
+}
+
+@keyframes shine {
+    to {
+        left: 350%;
+    }
+}
+
+@keyframes wiggle {
+    40% {
+      transform: translateX(0);
+    }
+    45% {
+      transform: translateX(-2px) rotate(2deg);
+    }
+    50% {
+      transform: translateX(2px) rotate(-2deg);
+    }
+    55% {
+      transform: translateX(-2px) rotate(2deg);
+    }
+    60% {
+      transform: translateX(2px) rotate(-2deg);
+    }
+    65% {
+      transform: translateX(0);
+    }
+  }
+
+  .wiggle-button {
+    animation: wiggle 2s infinite;
+    animation-delay: 3.5s; /* Delay the animation by 2 seconds */
+  }

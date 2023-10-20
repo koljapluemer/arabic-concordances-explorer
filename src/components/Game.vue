@@ -52,11 +52,36 @@ let exercises = [];
 // }
 
 import corpusData from "@/corpus1.json";
-const corpusSentences = corpusData["sentences"];
+const initialCorpusSentences = corpusData["sentences"];
 
-const corpusSentence = ref(null);
-corpusSentence.value =
-  corpusSentences[Math.floor(Math.random() * corpusSentences.length)];
+const initialCorpusSentence = ref(null);
+initialCorpusSentence.value =
+  initialCorpusSentences[
+    Math.floor(Math.random() * initialCorpusSentences.length)
+  ];
+
+const relevantCorpusSentences = ref([]);
+
+const exploredWord = ref(null);
+function exploreWord(word) {
+  exploredWord.value = word;
+  // try first to find corpus sentences with the word that have less than 6 words
+  let sentenceCandidates = initialCorpusSentences.filter(
+    (sentence) => sentence.includes(word) && splitSentence(sentence).length < 6
+  );
+  // add as many sentences as needed to have 3 relevant sentences (length does not matter, but they must include the word)
+  // but catch the possibility that there are not enough sentences in the corpus
+  const sentencesIncludingTheWord = initialCorpusSentences.filter((sentence) =>
+    sentence.includes(word)
+  );
+  sentenceCandidates = sentenceCandidates.concat(
+    sentencesIncludingTheWord.slice(
+      0,
+      3 - sentenceCandidates.length > 0 ? 3 - sentenceCandidates.length : 0
+    )
+  );
+  relevantCorpusSentences.value = sentenceCandidates.slice(0, 3);
+}
 
 // TODObut, implement: new exercises should be included, and deleted should be deleted
 if (localStorage.getItem("exercises")) {
@@ -314,12 +339,49 @@ function splitSentence(sentence) {
 
 <template>
   <div
-    class="card bg-gray-600 shadow-xl my-4 p-4 flex flex-col justify-start items-center min-w-sm max-w-screen-xl"
+    class="card bg-gray-600 shadow-xl my-4 p-4 flex flex-col justify-start items-center w-full max-w-screen-xl"
     style="min-height: 390px"
   >
-    <div class="flex gap-2 flex-wrap">
-      <div class="btn" v-for="word in splitSentence(corpusSentence)">
+    <div class="flex gap-2 flex-wrap flex-row-reverse" v-if="!exploredWord">
+      <div
+        class="cursor-pointer text-2xl"
+        v-for="word in splitSentence(initialCorpusSentence)"
+        @click="exploreWord(word)"
+      >
         {{ word }}
+      </div>
+    </div>
+    <div v-else>
+      <div class="border-b-2 p-2 mb-5 flex gap-5 items-center">
+        <div class="">
+          exploring:
+          <span class="text-3xl">{{ exploredWord }}</span>
+        </div>
+        <button class="btn btn-small text-sm" @click="exploredWord = null">
+          Back to sentence
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div
+          class="flex gap-2 flex-wrap flex-row-reverse p-2"
+          v-for="sentence in relevantCorpusSentences"
+          :class="
+            relevantCorpusSentences.indexOf(sentence) % 2 == 0
+              ? 'bg-gray-700'
+              : ''
+          "
+        >
+          <!-- mark word (text marker background effect) in sentence is tis the exploredWord -->
+          <div
+            class="cursor-pointer text-2xl"
+            :class="word.includes(exploredWord) ? 'bg-yellow-300' : ''"
+            v-for="word in splitSentence(sentence)"
+            @click="exploreWord(word)"
+          >
+            {{ word }}
+          </div>
+        </div>
       </div>
     </div>
   </div>

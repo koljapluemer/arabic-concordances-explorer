@@ -72,7 +72,7 @@ function exploreWord(word) {
   // add as many sentences as needed to have 3 relevant sentences (length does not matter, but they must include the word)
   // but catch the possibility that there are not enough sentences in the corpus
   const sentencesIncludingTheWord = initialCorpusSentences.filter((sentence) =>
-    sentence.includes(word)
+    sentence.includes(word) && !sentenceCandidates.includes(sentence)
   );
   sentenceCandidates = sentenceCandidates.concat(
     sentencesIncludingTheWord.slice(
@@ -83,144 +83,29 @@ function exploreWord(word) {
   relevantCorpusSentences.value = sentenceCandidates.slice(0, 3);
 }
 
-// TODObut, implement: new exercises should be included, and deleted should be deleted
-if (localStorage.getItem("exercises")) {
-  const exercisesFromStore = JSON.parse(localStorage.getItem("exercises"));
-  const exercisesFromJSON = exercises;
-  exercises = exercisesFromStore;
-  // if there are new exercises in the JSON (in case backend got updated), add them to the exercises array
-  // find match by 'sentence_en' property
-  for (const exercise of exercisesFromJSON) {
-    if (
-      !exercisesFromStore
-        .map((e) => e.sentence_en)
-        .includes(exercise.sentence_en)
-    ) {
-      exercises.push(exercise);
-    }
-  }
-  // if exercises were deleted from the JSON, delete them from the exercises array (check sentence_en, sentence_ar, and question)
-  for (const exercise of exercisesFromStore) {
-    if (
-      !exercisesFromJSON
-        .map((e) => e.sentence_en)
-        .includes(exercise.sentence_en) ||
-      !exercisesFromJSON
-        .map((e) => e.sentence_ar)
-        .includes(exercise.sentence_ar) ||
-      !exercisesFromJSON.map((e) => e.question).includes(exercise.question)
-    ) {
-      exercises.splice(
-        exercises.findIndex((e) => e.sentence_en == exercise.sentence_en),
-        1
-      );
-    }
-  }
-}
+// async function translateRandomWord() {
+//   // pick any word from the current relevantCorpusSentences
+//   const randomCurrentSentence = relevantCorpusSentences.value[
+//     Math.floor(Math.random() * relevantCorpusSentences.value.length)
+//   ];
+//   const randomWord = splitSentence(randomCurrentSentence)[
+//     Math.floor(Math.random() * splitSentence(randomCurrentSentence).length)
+//   ];
+//   const res = await fetch("https://libretranslate.com/translate", {
+// 	method: "POST",
+// 	body: JSON.stringify({
+// 		q: randomWord,
+// 		source: "ar",
+// 		target: "en",
+// 		format: "text",
+// 		api_key: ""
+// 	}),
+// 	headers: { "Content-Type": "application/json" }
+// });
 
-// same stuff with highscores
-let highscores = ref([]);
-if (localStorage.getItem("highscores")) {
-  highscores.value = JSON.parse(localStorage.getItem("highscores"));
-}
+// console.log(await res.json());
+// }
 
-function getNextExercise() {
-  clearTimeout(timeoutId.value);
-  // check if time is left on the timer
-  if (currentTime.value >= totalTime.value) {
-    timerRunning.value = false;
-    toaster.info("Time's up!");
-    setGameMode("game-ended");
-    return;
-  }
-
-  isReverseOrder.value = Math.random() < 0.5;
-
-  isRevealed.value = false;
-  let possibleExercises = exercises.filter(
-    (exercise) => exercise.sr.due <= Math.floor(new Date().getTime() / 1000)
-  );
-  if (possibleExercises.length == 0) {
-    alert("You have absolutely nothing to practice right now. Good job.");
-    return;
-  }
-  exercise.value =
-    possibleExercises[Math.floor(Math.random() * possibleExercises.length)];
-  timerRunning.value = true;
-}
-
-function userSawExerciseBefore() {
-  return exercise.value.stats.length > 0;
-}
-
-function moveToNextExercise() {
-  if (isRevealed.value) {
-    getNextExercise();
-  }
-}
-
-function handleAnswer(rating) {
-  timerRunning.value = false;
-  isRevealed.value = true;
-  // trigger automatic next exercise after 3 seconds
-  timeoutId.value = setTimeout(() => {
-    moveToNextExercise();
-  }, 5000);
-
-  exercisesDoneThisSession.value++;
-  lastAnswerWasCorrect.value = rating;
-
-  // Usual naive SR
-  // if answer correct, double interval, if incorrect, half interval (minimum 10)
-  if (rating) {
-    streak.value++;
-
-    exercise.value.sr.repetitions++;
-    exercise.value.sr.interval =
-      exercise.value.sr.interval * 2 * exercise.value.sr.repetitions;
-    // if the repetition before this one was more than 16h ago, set the interval to at least 16h
-    if (
-      exercise.value.stats.length > 1 &&
-      exercise.value.stats[exercise.value.stats.length - 2].timestamp <
-        Math.floor(new Date().getTime() / 1000) - 16 * 60 * 60
-    ) {
-      exercise.value.sr.interval = Math.max(
-        exercise.value.sr.interval,
-        16 * 60 * 60
-      );
-    }
-
-    // time and score
-    currentTime.value -= 5;
-    toaster.success(`+5 seconds`);
-    const pointsToAdd = 10 + streak.value * 2;
-    score.value += pointsToAdd;
-    toaster.success(`+${pointsToAdd}`);
-  } else {
-    streak.value = 0;
-    incorrectAnswerCounter.value++;
-    exercise.value.sr.repetitions = 0;
-
-    // time and score
-    const addToTime = 2 * incorrectAnswerCounter.value + 1;
-    currentTime.value += addToTime;
-    toaster.error(`-${addToTime} seconds`);
-  }
-
-  // set due to now + interval
-  exercise.value.sr.due =
-    Math.floor(new Date().getTime() / 1000) + exercise.value.sr.interval;
-  const statsObj = {
-    guessWasCorrect: rating,
-    timestamp: Math.floor(new Date().getTime() / 1000),
-    exercise: exercise.question,
-    answer_options: [exercise.correct_answer, exercise.wrong_answer],
-  };
-  exercise.value.stats.push(statsObj);
-  // save the sentencesBank and exercises to localStorage
-  localStorage.setItem("exercises", JSON.stringify(exercises));
-  sendDataToBackend(statsObj);
-}
 
 async function sendDataToBackend(statsObj) {
   // try {
@@ -235,101 +120,6 @@ async function sendDataToBackend(statsObj) {
   // } catch (error) {
   //   console.error(error);
   // }
-}
-
-function setGameMode(mode) {
-  if (mode == gameMode.value) {
-    return;
-  }
-  gameMode.value = mode;
-  if (mode == "go") {
-    score.value = 0;
-    // reset timer stuff (second may be not necessary)
-    currentTime.value = 0;
-    totalTime.value = 60;
-    streak.value = 0;
-    incorrectAnswerCounter.value = 0;
-    exercisesDoneThisSession.value = 0;
-
-    startTimer();
-    getNextExercise();
-  } else if (mode == "game-ended") {
-    lastScore.value = score.value;
-    // toast when score is higher than 10th entry in highscores
-    if (highscores.value.length < 10) {
-      toaster.success("New Top 10 Entry!");
-    } else {
-      if (score.value > highscores.value[9].score) {
-        toaster.success("New Top 10 Entry!");
-      }
-    }
-    // toast for new personal best
-    if (highscores.value.length == 0) {
-      toaster.success("New Personal Best!");
-    } else {
-      if (score.value > highscores.value[0].score) {
-        toaster.success("New Personal Best!");
-      }
-    }
-    // save highscore
-    highscores.value.push({
-      score: score.value,
-      date: new Date().toISOString(),
-    });
-    localStorage.setItem("highscores", JSON.stringify(highscores.value));
-    setGameMode("undetermined");
-  }
-}
-
-function sortedHighscores() {
-  return highscores.value.sort((a, b) => b.score - a.score);
-}
-
-const isReverseOrder = ref(false);
-
-// add global keypress event listener in mounted:
-// on enter, show next card
-onMounted(() => {
-  window.addEventListener("keydown", (e) => {
-    if (e.key == "ArrowLeft") {
-      if (gameMode.value == "go" && !isRevealed.value) {
-        handleAnswer(!isReverseOrder.value);
-      }
-    } else if (e.key == "ArrowRight") {
-      if (gameMode.value == "go" && !isRevealed.value) {
-        handleAnswer(isReverseOrder.value);
-      }
-    } else if (e.key == "Enter") {
-      if (gameMode.value == "go" && isRevealed.value) {
-        getNextExercise();
-        return;
-      }
-      if (gameMode.value == "undetermined") {
-        setGameMode("go");
-      }
-    }
-  });
-});
-
-const totalTime = ref(60.0); // Total time in seconds
-const currentTime = ref(0.0); // Current time in seconds
-const timerRunning = ref(false);
-const timer = ref(null);
-
-const remainingTime = computed(() => totalTime.value - currentTime.value);
-const progressStyle = computed(() => ({
-  width: `${(1 - currentTime.value / totalTime.value) * 100}%`,
-}));
-
-function startTimer() {
-  timerRunning.value = true;
-  timer.value = setInterval(updateTime, 1000);
-}
-
-function updateTime() {
-  if (timerRunning.value) {
-    currentTime.value += 1;
-  }
 }
 
 function splitSentence(sentence) {
@@ -381,6 +171,10 @@ function splitSentence(sentence) {
           >
             {{ word }}
           </div>
+        </div>
+
+        <div class="">
+        <button class="btn" @click=translateRandomWord>Translate Random Word</button>
         </div>
       </div>
     </div>

@@ -73,7 +73,10 @@ function exploreWord(word) {
   // but catch the possibility that there are not enough sentences in the corpus
   const sentencesIncludingTheWord = initialCorpusSentences.filter(
     (sentence) =>
-      sentence.includes(word) && !sentenceCandidates.includes(sentence)
+      sentence.includes(word) &&
+      !sentenceCandidates.includes(sentence) &&
+      sentence !== initialCorpusSentence.value &&
+      splitSentence(sentence).length < 35
   );
   sentenceCandidates = sentenceCandidates.concat(
     sentencesIncludingTheWord.slice(
@@ -154,7 +157,7 @@ function splitSentence(sentence) {
 
       <div class="flex flex-col gap-4">
         <div
-          class="flex gap-4 p-2 justify-between items-center"
+          class="p-4"
           v-for="sentence in relevantCorpusSentences"
           :class="
             relevantCorpusSentences.indexOf(sentence) % 2 == 0
@@ -162,45 +165,43 @@ function splitSentence(sentence) {
               : ''
           "
         >
-          <!-- mark word (text marker background effect) in sentence is tis the exploredWord -->
-          <div class="flex gap-2 flex-wrap flex-row-reverse">
-            <div
-              class="cursor-pointer text-2xl"
-              :class="word.includes(exploredWord) ? 'bg-yellow-300' : ''"
-              v-for="word in splitSentence(sentence)"
-              @click="exploreWord(word)"
-            >
-              {{ word }}
+          <div class="flex gap-4 p-2 justify-between items-center">
+            <!-- mark word (text marker background effect) in sentence is tis the exploredWord -->
+            <div class="flex gap-2 flex-wrap flex-row-reverse">
+              <div
+                class="cursor-pointer text-2xl"
+                :class="word.includes(exploredWord) ? 'bg-yellow-300' : ''"
+                v-for="word in splitSentence(sentence)"
+                @click="exploreWord(word)"
+              >
+                {{ word }}
+              </div>
             </div>
+
+            <a
+              target="_blank"
+              class=""
+              :href="`https://translate.google.com/?sl=ar&tl=en&text=${sentence}&op=translate`"
+            >
+              <svg
+                class="btn btn-sm"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </a>
           </div>
 
-          <a
-            target="_blank"
-            class=""
-            :href="`https://translate.google.com/?sl=ar&tl=en&text=${sentence}&op=translate`"
-          >
-            <svg
-              class="btn btn-sm"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></path>
-            </svg>
-          </a>
-        </div>
-
-        <div class="">
-          <button class="btn" @click="translateRandomWord">
-            Translate Random Word
-          </button>
+          <input type="text" class="p-2 rounded w-full" placeholder="your sentence notes..." />
         </div>
       </div>
     </div>

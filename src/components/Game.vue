@@ -92,13 +92,39 @@ let exercises = [];
 import corpusData from "@/corpus1.json";
 const initialCorpusSentences = corpusData["sentences"];
 
-const initialCorpusSentence = ref(null);
-initialCorpusSentence.value =
-  initialCorpusSentences[
-    Math.floor(Math.random() * initialCorpusSentences.length)
-  ];
-
 const relevantCorpusSentences = ref([]);
+
+import cognatesData from "@/cognates.json";
+const cognates = cognatesData["cognates"];
+// get easy sentences: at most 6 words at least 3 words, and at least 1 cognate
+const easySentences = initialCorpusSentences.filter(
+  (sentence) =>
+    splitSentence(sentence).length < 6 &&
+    splitSentence(sentence).length > 3 &&
+    splitSentence(sentence).some((word) => cognates.includes(word))
+);
+
+
+const initialCorpusSentence = ref(null);
+// first, try to find an easy sentence that has not been practiced yet (no translation attempt)
+const easySentencesNotPracticedYet = easySentences.filter(
+  (sentence) => !sentencesTranslations.value[sentence]
+);
+// if they exist, pick one of them, otherwise pick an unpracticed sentence from the whole corpus
+if (easySentencesNotPracticedYet.length > 0) {
+  initialCorpusSentence.value =
+    easySentencesNotPracticedYet[
+      Math.floor(Math.random() * easySentencesNotPracticedYet.length)
+    ];
+} else {
+  const unpracticedSentences = initialCorpusSentences.filter(
+    (sentence) => !sentencesTranslations.value[sentence]
+  );
+  initialCorpusSentence.value =
+    unpracticedSentences[
+      Math.floor(Math.random() * unpracticedSentences.length)
+    ];
+}
 
 const exploredWord = ref(null);
 function exploreWord(word) {

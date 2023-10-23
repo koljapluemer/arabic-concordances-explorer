@@ -27,7 +27,6 @@ const lastScore = ref(null);
 
 const timeoutId = ref(null);
 
-
 // if uid is not in localStorage, create one and save
 let uid;
 if (localStorage.getItem("uid")) {
@@ -75,8 +74,6 @@ watch(
   { deep: true }
 );
 
-
-
 // EXERCISES IMPORTER FROM BACKEND
 let exercises = [];
 // import data from "@/clozes.json";
@@ -108,7 +105,10 @@ function exploreWord(word) {
   exploredWord.value = word;
   // try first to find corpus sentences with the word that have less than 6 words
   let sentenceCandidates = initialCorpusSentences.filter(
-    (sentence) => sentence.includes(word) && splitSentence(sentence).length < 6
+    (sentence) =>
+      sentence.includes(word) &&
+      splitSentence(sentence).length < 6 &&
+      sentence !== initialCorpusSentence.value
   );
   // add as many sentences as needed to have 3 relevant sentences (length does not matter, but they must include the word)
   // but catch the possibility that there are not enough sentences in the corpus
@@ -126,6 +126,19 @@ function exploreWord(word) {
     )
   );
   relevantCorpusSentences.value = sentenceCandidates.slice(0, 3);
+  // try to find a sentence (below 35 words) that is not included so far, and matches the word - exactly -
+  // this is to prevent a case where short words generate only fake concordance, where their letters are included in other words
+  // catch possibility that there is no such sentence
+  const exactSentence = initialCorpusSentences.find(
+    (sentence) =>
+      sentence.includes(word) &&
+      !sentenceCandidates.includes(sentence) &&
+      sentence !== initialCorpusSentence.value &&
+      splitSentence(sentence).length < 35
+  );
+  if (exactSentence) {
+    relevantCorpusSentences.value.push(exactSentence);
+  }
 }
 
 // async function translateRandomWord() {
@@ -169,8 +182,6 @@ async function sendDataToBackend(statsObj) {
 function splitSentence(sentence) {
   return sentence.split(" ");
 }
-
-
 </script>
 
 <template>
@@ -202,7 +213,7 @@ function splitSentence(sentence) {
           />
         </label>
       </div>
-       <div class="form-control my-4">
+      <div class="form-control my-4">
         <label class="input-group">
           <span>Notes</span>
           <textarea

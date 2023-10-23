@@ -27,6 +27,8 @@ const lastScore = ref(null);
 
 const timeoutId = ref(null);
 
+const sentencesNotes = ref({})
+
 // if uid is not in localStorage, create one and save
 let uid;
 if (localStorage.getItem("uid")) {
@@ -34,6 +36,11 @@ if (localStorage.getItem("uid")) {
 } else {
   uid = Math.random().toString(36).substring(2, 15);
   localStorage.setItem("uid", uid);
+}
+
+// load sentencesNotes from localStorage (if they exist there)
+if (localStorage.getItem("sentencesNotes")) {
+  sentencesNotes.value = JSON.parse(localStorage.getItem("sentencesNotes"));
 }
 
 // EXERCISES IMPORTER FROM BACKEND
@@ -128,6 +135,11 @@ async function sendDataToBackend(statsObj) {
 function splitSentence(sentence) {
   return sentence.split(" ");
 }
+
+// deep watcher for sentencesNotes, saving to JSON
+watch(sentencesNotes, () => {
+  localStorage.setItem("sentencesNotes", JSON.stringify(sentencesNotes.value));
+}, { deep: true });
 </script>
 
 <template>
@@ -201,7 +213,7 @@ function splitSentence(sentence) {
             </a>
           </div>
 
-          <input type="text" class="p-2 rounded w-full" placeholder="your sentence notes..." />
+          <input type="text" class="p-2 rounded w-full" placeholder="your sentence notes..." v-model="sentencesNotes[sentence]">
         </div>
       </div>
     </div>

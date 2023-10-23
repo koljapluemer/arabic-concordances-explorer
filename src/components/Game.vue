@@ -104,27 +104,31 @@ const easySentences = initialCorpusSentences.filter(
     splitSentence(sentence).some((word) => cognates.includes(word))
 );
 
-
 const initialCorpusSentence = ref(null);
-// first, try to find an easy sentence that has not been practiced yet (no translation attempt)
-const easySentencesNotPracticedYet = easySentences.filter(
-  (sentence) => !sentencesTranslations.value[sentence]
-);
-// if they exist, pick one of them, otherwise pick an unpracticed sentence from the whole corpus
-if (easySentencesNotPracticedYet.length > 0) {
-  initialCorpusSentence.value =
-    easySentencesNotPracticedYet[
-      Math.floor(Math.random() * easySentencesNotPracticedYet.length)
-    ];
-} else {
-  const unpracticedSentences = initialCorpusSentences.filter(
+
+function getNewSentence() {
+  // first, try to find an easy sentence that has not been practiced yet (no translation attempt)
+  const easySentencesNotPracticedYet = easySentences.filter(
     (sentence) => !sentencesTranslations.value[sentence]
   );
-  initialCorpusSentence.value =
-    unpracticedSentences[
-      Math.floor(Math.random() * unpracticedSentences.length)
-    ];
+  // if they exist, pick one of them, otherwise pick an unpracticed sentence from the whole corpus
+  if (easySentencesNotPracticedYet.length > 0) {
+    initialCorpusSentence.value =
+      easySentencesNotPracticedYet[
+        Math.floor(Math.random() * easySentencesNotPracticedYet.length)
+      ];
+  } else {
+    const unpracticedSentences = initialCorpusSentences.filter(
+      (sentence) => !sentencesTranslations.value[sentence]
+    );
+    initialCorpusSentence.value =
+      unpracticedSentences[
+        Math.floor(Math.random() * unpracticedSentences.length)
+      ];
+  }
 }
+
+getNewSentence();
 
 const exploredWord = ref(null);
 function exploreWord(word) {
@@ -206,6 +210,7 @@ async function sendDataToBackend(statsObj) {
 }
 
 function splitSentence(sentence) {
+  if (!sentence) return [];
   return sentence.split(" ");
 }
 </script>
@@ -249,6 +254,54 @@ function splitSentence(sentence) {
             v-model="sentencesNotes[initialCorpusSentence]"
           ></textarea>
         </label>
+      </div>
+      <div class="flex gap-2">
+        <!-- translation for the sentence, only enabled when translation attempt has at least as many words as the arabic sentence -->
+        <a
+          target="_blank"
+          class="btn"
+          :href="`https://translate.google.com/?sl=ar&tl=en&text=${initialCorpusSentence}&op=translate`"
+          :class="
+            splitSentence(initialCorpusSentence).length - 2 <=
+              splitSentence(sentencesTranslations[initialCorpusSentence])
+                .length &&
+            sentencesTranslations[initialCorpusSentence].length > 3
+              ? ''
+              : 'btn-disabled'
+          "
+        >
+          <span> Check Translation</span>
+          <svg
+            class="w-8 h-8"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+        </a>
+        <!-- button to get new sentence, same conditions -->
+        <button
+          class="btn"
+          :class="
+            splitSentence(initialCorpusSentence).length - 2 <=
+              splitSentence(sentencesTranslations[initialCorpusSentence])
+                .length &&
+            sentencesTranslations[initialCorpusSentence].length > 3
+              ? ''
+              : 'btn-disabled'
+          "
+          @click="getNewSentence()"
+        >
+          Get Next Sentence
+        </button>
       </div>
     </div>
     <div v-else>

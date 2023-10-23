@@ -27,7 +27,6 @@ const lastScore = ref(null);
 
 const timeoutId = ref(null);
 
-const sentencesNotes = ref({})
 
 // if uid is not in localStorage, create one and save
 let uid;
@@ -38,10 +37,45 @@ if (localStorage.getItem("uid")) {
   localStorage.setItem("uid", uid);
 }
 
+const sentencesNotes = ref({});
 // load sentencesNotes from localStorage (if they exist there)
 if (localStorage.getItem("sentencesNotes")) {
   sentencesNotes.value = JSON.parse(localStorage.getItem("sentencesNotes"));
 }
+
+// deep watcher for sentencesNotes, saving to JSON
+watch(
+  sentencesNotes,
+  () => {
+    localStorage.setItem(
+      "sentencesNotes",
+      JSON.stringify(sentencesNotes.value)
+    );
+  },
+  { deep: true }
+);
+
+const sentencesTranslations = ref({});
+// load sentencesTranslations from localStorage (if they exist there)
+if (localStorage.getItem("sentencesTranslations")) {
+  sentencesTranslations.value = JSON.parse(
+    localStorage.getItem("sentencesTranslations")
+  );
+}
+
+// deep watcher for sentencesTranslations, saving to JSON
+watch(
+  sentencesTranslations,
+  () => {
+    localStorage.setItem(
+      "sentencesTranslations",
+      JSON.stringify(sentencesTranslations.value)
+    );
+  },
+  { deep: true }
+);
+
+
 
 // EXERCISES IMPORTER FROM BACKEND
 let exercises = [];
@@ -136,24 +170,48 @@ function splitSentence(sentence) {
   return sentence.split(" ");
 }
 
-// deep watcher for sentencesNotes, saving to JSON
-watch(sentencesNotes, () => {
-  localStorage.setItem("sentencesNotes", JSON.stringify(sentencesNotes.value));
-}, { deep: true });
+
 </script>
 
 <template>
   <div
-    class="card bg-gray-600 shadow-xl my-4 p-4 flex flex-col justify-start items-center w-full max-w-screen-xl"
+    class="card bg-gray-600 shadow-xl my-4 p-4 flex flex-col justify-start items-center w-full max-w-screen-2xl"
     style="min-height: 390px"
   >
-    <div class="flex gap-2 flex-wrap flex-row-reverse" v-if="!exploredWord">
-      <div
-        class="cursor-pointer text-2xl"
-        v-for="word in splitSentence(initialCorpusSentence)"
-        @click="exploreWord(word)"
-      >
-        {{ word }}
+    <div class="w-full" v-if="!exploredWord">
+      <h2 class="font-bold text-center text-2xl mb-2">
+        Try to translate this sentence:
+      </h2>
+      <div class="flex gap-2 flex-wrap flex-row-reverse justify-center">
+        <div
+          class="cursor-pointer text-3xl"
+          v-for="word in splitSentence(initialCorpusSentence)"
+          @click="exploreWord(word)"
+        >
+          {{ word }}
+        </div>
+      </div>
+      <div class="form-control my-4">
+        <label class="input-group">
+          <span>Your translation attempt</span>
+          <input
+            type="text"
+            placeholder="..."
+            class="input input-bordered w-full"
+            v-model="sentencesTranslations[initialCorpusSentence]"
+          />
+        </label>
+      </div>
+       <div class="form-control my-4">
+        <label class="input-group">
+          <span>Notes</span>
+          <textarea
+            placeholder="..."
+            class="textarea input-bordered w-full"
+            rows="7"
+            v-model="sentencesNotes[initialCorpusSentence]"
+          ></textarea>
+        </label>
       </div>
     </div>
     <div v-else>
@@ -213,7 +271,12 @@ watch(sentencesNotes, () => {
             </a>
           </div>
 
-          <input type="text" class="p-2 rounded w-full" placeholder="your sentence notes..." v-model="sentencesNotes[sentence]">
+          <input
+            type="text"
+            class="p-2 rounded w-full"
+            placeholder="your sentence notes..."
+            v-model="sentencesNotes[sentence]"
+          />
         </div>
       </div>
     </div>

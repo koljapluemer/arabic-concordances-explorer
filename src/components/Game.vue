@@ -56,11 +56,11 @@ watch(
 
 const sentencesTranslations = ref({});
 // load sentencesTranslations from localStorage (if they exist there)
-if (localStorage.getItem("sentencesTranslations")) {
-  sentencesTranslations.value = JSON.parse(
-    localStorage.getItem("sentencesTranslations")
-  );
-}
+// if (localStorage.getItem("sentencesTranslations")) {
+//   sentencesTranslations.value = JSON.parse(
+//     localStorage.getItem("sentencesTranslations")
+//   );
+// }
 
 // deep watcher for sentencesTranslations, saving to JSON
 watch(
@@ -107,37 +107,33 @@ const easySentences = initialCorpusSentences.filter(
 // get sentences that are both easy and have a word from vocab.json
 import vocabData from "@/vocab.json";
 const vocab = vocabData["words"];
-const easySentencesWithVocab = easySentences.filter((sentence) =>
-  splitSentence(sentence).some((word) => vocab.includes(word))
-);
-console.log(`found ${easySentencesWithVocab.length} easy sentences with vocab`);
-const allVocabSentences = initialCorpusSentences.filter((sentence) =>
-  splitSentence(sentence).some((word) => vocab.includes(word)) &&
-  splitSentence(sentence).length < 15
+
+const allVocabSentences = initialCorpusSentences.filter(
+  (sentence) =>
+    splitSentence(sentence).some((word) => vocab.includes(word)) &&
+    splitSentence(sentence).length < 15
 );
 console.log(`overall found ${allVocabSentences.length} sentences with vocab`);
 
 const initialCorpusSentence = ref(null);
 
 function getNewSentence() {
-  // first, try to find an easy sentence that has not been practiced yet (no translation attempt)
-  const easyVocabSentencesNotPracticedYet = easySentencesWithVocab.filter(
+  const unpracticedSentences = allVocabSentences.filter(
     (sentence) => !sentencesTranslations.value[sentence]
   );
-  // if they exist, pick one of them, otherwise pick an unpracticed sentence from the whole corpus
-  if (easyVocabSentencesNotPracticedYet.length > 0) {
-    initialCorpusSentence.value =
-      easyVocabSentencesNotPracticedYet[
-        Math.floor(Math.random() * easyVocabSentencesNotPracticedYet.length)
-      ];
-  } else {
-    const unpracticedSentences = allVocabSentences.filter(
-      (sentence) => !sentencesTranslations.value[sentence]
-    );
-    initialCorpusSentence.value =
-      unpracticedSentences[
-        Math.floor(Math.random() * unpracticedSentences.length)
-      ];
+  initialCorpusSentence.value =
+    unpracticedSentences[
+      Math.floor(Math.random() * unpracticedSentences.length)
+    ];
+
+  console.log(`new sentence: ${initialCorpusSentence.value}`);
+  console.log(
+    `sentencesTranslations: ${JSON.stringify(sentencesTranslations.value)}`
+  );
+  // if sentencesTranslations[initialCorpusSentence] does not exist, create it
+
+  if (!sentencesTranslations.value[initialCorpusSentence.value]) {
+    sentencesTranslations.value[initialCorpusSentence.value] = "";
   }
 }
 
@@ -275,9 +271,7 @@ function splitSentence(sentence) {
           class="btn"
           :href="`https://translate.google.com/?sl=ar&tl=en&text=${initialCorpusSentence}&op=translate`"
           :class="
-            splitSentence(initialCorpusSentence).length - 2 <=
-              splitSentence(sentencesTranslations[initialCorpusSentence])
-                .length &&
+            splitSentence(initialCorpusSentence).length > 3 &&
             sentencesTranslations[initialCorpusSentence].length > 3
               ? ''
               : 'btn-disabled'

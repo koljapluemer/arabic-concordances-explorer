@@ -99,26 +99,39 @@ const cognates = cognatesData["cognates"];
 // get easy sentences: at most 6 words at least 3 words, and at least 1 cognate
 const easySentences = initialCorpusSentences.filter(
   (sentence) =>
-    splitSentence(sentence).length < 6 &&
+    splitSentence(sentence).length < 12 &&
     splitSentence(sentence).length > 3 &&
     splitSentence(sentence).some((word) => cognates.includes(word))
 );
+
+// get sentences that are both easy and have a word from vocab.json
+import vocabData from "@/vocab.json";
+const vocab = vocabData["words"];
+const easySentencesWithVocab = easySentences.filter((sentence) =>
+  splitSentence(sentence).some((word) => vocab.includes(word))
+);
+console.log(`found ${easySentencesWithVocab.length} easy sentences with vocab`);
+const allVocabSentences = initialCorpusSentences.filter((sentence) =>
+  splitSentence(sentence).some((word) => vocab.includes(word)) &&
+  splitSentence(sentence).length < 15
+);
+console.log(`overall found ${allVocabSentences.length} sentences with vocab`);
 
 const initialCorpusSentence = ref(null);
 
 function getNewSentence() {
   // first, try to find an easy sentence that has not been practiced yet (no translation attempt)
-  const easySentencesNotPracticedYet = easySentences.filter(
+  const easyVocabSentencesNotPracticedYet = easySentencesWithVocab.filter(
     (sentence) => !sentencesTranslations.value[sentence]
   );
   // if they exist, pick one of them, otherwise pick an unpracticed sentence from the whole corpus
-  if (easySentencesNotPracticedYet.length > 0) {
+  if (easyVocabSentencesNotPracticedYet.length > 0) {
     initialCorpusSentence.value =
-      easySentencesNotPracticedYet[
-        Math.floor(Math.random() * easySentencesNotPracticedYet.length)
+      easyVocabSentencesNotPracticedYet[
+        Math.floor(Math.random() * easyVocabSentencesNotPracticedYet.length)
       ];
   } else {
-    const unpracticedSentences = initialCorpusSentences.filter(
+    const unpracticedSentences = allVocabSentences.filter(
       (sentence) => !sentencesTranslations.value[sentence]
     );
     initialCorpusSentence.value =

@@ -92,6 +92,12 @@ let exercises = [];
 import corpusData from "@/corpus1.json";
 const initialCorpusSentences = corpusData["sentences"];
 
+// add data from ara_sentences.json
+import corpusData2 from "@/ara_sentences.json";
+const initialCorpusSentences2 = corpusData2["sentences"];
+initialCorpusSentences.push(...initialCorpusSentences2);
+
+
 const relevantCorpusSentences = ref([]);
 
 import cognatesData from "@/cognates.json";

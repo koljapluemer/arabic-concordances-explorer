@@ -1,12 +1,1 @@
-## Must
-
-
-## Should 
-
-- game end transition missing, there needs to be something
-- show score after game
-- communicate that you can use keys
-
-## Could 
-
-- give a more fine-grained access control to supabase
+* make a field for post-translation notes (probably restructure at this point, don't make a third data structure with pk being a sentence...)

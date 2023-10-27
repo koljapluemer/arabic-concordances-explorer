@@ -279,7 +279,9 @@ function splitSentence(sentence) {
           class="btn"
           :href="`https://translate.google.com/?sl=ar&tl=en&text=${initialCorpusSentence}&op=translate`"
           :class="
-            splitSentence(initialCorpusSentence).length > 3 &&
+            splitSentence(initialCorpusSentence).length - 2 <=
+              splitSentence(sentencesTranslations[initialCorpusSentence])
+                .length &&
             sentencesTranslations[initialCorpusSentence].length > 3
               ? ''
               : 'btn-disabled'

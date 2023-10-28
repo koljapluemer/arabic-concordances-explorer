@@ -118,7 +118,7 @@ const vocab = vocabData["words"];
 const allVocabSentences = initialCorpusSentences.filter(
   (sentence) =>
     splitSentence(sentence).some((word) => vocab.includes(word)) &&
-    splitSentence(sentence).length < 15
+    splitSentence(sentence).length < 7
 );
 console.log(`overall found ${allVocabSentences.length} sentences with vocab`);
 
@@ -238,18 +238,21 @@ function splitSentence(sentence) {
     style="min-height: 390px"
   >
     <div class="w-full" v-if="!exploredWord">
-      <h2 class="font-bold text-center text-2xl mb-2">
+      <h2 class="font-bold text-center text-2xl">
         Try to translate this sentence:
       </h2>
+      <h3 class="text-center mb-6">Click on a word to explore.</h3>
       <div class="flex gap-2 flex-wrap flex-row-reverse justify-center">
         <div
-          class="cursor-pointer text-3xl"
+          class="cursor-pointer text-4xl hover:bg-yellow-300"
+          dir="rtl"
           v-for="word in splitSentence(initialCorpusSentence)"
           @click="exploreWord(word)"
         >
           {{ word }}
         </div>
       </div>
+
       <div class="form-control my-4">
         <label class="input-group">
           <span>Your translation attempt</span>
@@ -329,7 +332,13 @@ function splitSentence(sentence) {
             <span class="text-3xl">{{ exploredWord }}</span>
           </div>
 
-          <button class="btn btn-sm text-sm" @click="exploredWord = null">
+          <button
+            class="btn btn-sm text-sm"
+            @click="
+              explorationBreadcrumbs = [];
+              exploredWord = null;
+            "
+          >
             Back to main sentence
           </button>
         </div>

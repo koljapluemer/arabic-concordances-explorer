@@ -4,8 +4,7 @@ import Game from "./components/Game.vue";
 
 <template>
   <main class="p-2 flex flex-col items-center flex-grow justify-center w-full">
-
-  <Game />
+    <Game />
   </main>
 
   <footer class="border-t-2 mt-10 w-full p-4 text-sm">
@@ -44,22 +43,44 @@ import Game from "./components/Game.vue";
 
     <ul class="flex flex-col gap-2">
       <li>
-        Thanks to all the friends who provided content & feedback. Furthermore, I
-        used the following sources for inspiration and exercise templates:
-        <a
-          href="https://discoverdiscomfort.com/colloquial-egyptian-arabic-phrases/"
-          >[0]</a
-        >
-        <a
-          href="https://storylearning.com/learn/arabic/arabic-tips/arabic-phrases"
-          >[1]</a
-        >
-        <a href="https://talkinarabic.com/egyptian/arabic-phrases/">[2]</a>
+        This tool would not be possible without the used Arabic Corpora. I used:
+        <ul class="list-disc list-inside pl-4">
+          <li>
+            The
+            <a href="https://tatoeba.org/en/downloads" class="underline"
+              >Tatoeba Sentence Download</a
+            >.
+          </li>
+          <li>
+            The
+            <a
+              href="https://github.com/linuxscout/tashkeela2"
+              class="underline"
+            >
+              Tashkeela2 Corpus</a
+            >
+          </li>
+        </ul>
+      </li>
+      <li>
+        I ran experiments with:
+        <ul class="list-disc list-inside pl-4">
+          <li>
+            <a href="https://app.memrise.com/course/463357/al-kitaab-unit-vocab/2/" class="underline">This vocabulary list</a>
+          </li>
+              <li>
+            <a href="http://www.modernstandardarabic.com/cognate-list-of-arabic-and-english-words/" class="underline">This cognate list</a>
+          </li>
+        </ul>
       </li>
       <li>
         Made by
-        <a class="underline" href="https://koljapluemer.com/">Kolja Sam Pluemer</a
-        >. <a href="mailto:feedback@koljapluemer.com" class="underline">Mail me your feedback!</a>  
+        <a class="underline" href="https://koljapluemer.com/"
+          >Kolja Sam Pluemer</a
+        >.
+        <a href="mailto:feedback@koljapluemer.com" class="underline"
+          >Mail me your feedback!</a
+        >
       </li>
       <li>
         Pseudonymous learning is transmitted to improve the app. No personal

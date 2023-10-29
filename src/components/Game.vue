@@ -393,6 +393,7 @@ function splitSentence(sentence) {
                 :class="word.includes(exploredWord) ? 'bg-yellow-300' : ''"
                 v-for="word in splitSentence(sentence)"
                 @click="exploreWord(word)"
+                dir="rtl"
               >
                 {{ word }}
               </div>

@@ -93,7 +93,13 @@ import Game from "./components/Game.vue";
           class="underline"
           href="https://arabic-pronounciation.koljapluemer.com/"
           >Arabic Pronunciation Tutor (WIP)</a
-        >
+        >,
+            <a
+          class="underline"
+          href="https://basic-arabic-sentences.koljapluemer.com/"
+          >Trainer for Egyptian Arabic Survival Sentences</a
+        >,
+
         &
         <a class="underline" href="https://arabic-numbers.koljapluemer.com/"
           >Arabic Number Practice</a

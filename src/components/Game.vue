@@ -115,6 +115,21 @@ const easySentences = initialCorpusSentences.filter(
 import vocabData from "@/vocab.json";
 const vocab = vocabData["words"];
 
+// make a list of obj to track stats for each vocab word
+// check if its in localStorage, if not, create it
+let vocabStats = [];
+if (localStorage.getItem("vocabStats")) {
+  vocabStats = JSON.parse(localStorage.getItem("vocabStats"));
+} else {
+  for (const word of vocab) {
+    vocabStats.push({
+      word: word,
+      stats: [],
+    });
+  }
+  localStorage.setItem("vocabStats", JSON.stringify(vocabStats));
+}
+
 const allVocabSentences = initialCorpusSentences.filter(
   (sentence) =>
     splitSentence(sentence).some((word) => vocab.includes(word)) &&
@@ -125,6 +140,7 @@ console.log(`overall found ${allVocabSentences.length} sentences with vocab`);
 const initialCorpusSentence = ref(null);
 
 function getNewSentence() {
+  
   const unpracticedSentences = allVocabSentences.filter(
     (sentence) => !sentencesTranslations.value[sentence]
   );

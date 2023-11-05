@@ -1,10 +1,10 @@
 <script setup>
-import Game from "./components/Game.vue";
+// import Game from "./components/Game.vue";
 </script>
 
 <template>
   <main class="p-2 flex flex-col items-center flex-grow justify-center w-full">
-    <Game />
+    <router-view />
   </main>
 
   <footer class="border-t-2 mt-10 w-full p-4 text-sm">
@@ -66,10 +66,18 @@ import Game from "./components/Game.vue";
         I ran experiments with:
         <ul class="list-disc list-inside pl-4">
           <li>
-            <a href="https://app.memrise.com/course/463357/al-kitaab-unit-vocab/2/" class="underline">This vocabulary list</a>
+            <a
+              href="https://app.memrise.com/course/463357/al-kitaab-unit-vocab/2/"
+              class="underline"
+              >This vocabulary list</a
+            >
           </li>
-              <li>
-            <a href="http://www.modernstandardarabic.com/cognate-list-of-arabic-and-english-words/" class="underline">This cognate list</a>
+          <li>
+            <a
+              href="http://www.modernstandardarabic.com/cognate-list-of-arabic-and-english-words/"
+              class="underline"
+              >This cognate list</a
+            >
           </li>
         </ul>
       </li>
@@ -94,13 +102,11 @@ import Game from "./components/Game.vue";
           href="https://arabic-pronounciation.koljapluemer.com/"
           >Arabic Pronunciation Tutor (WIP)</a
         >,
-            <a
+        <a
           class="underline"
           href="https://basic-arabic-sentences.koljapluemer.com/"
           >Trainer for Egyptian Arabic Survival Sentences</a
-        >,
-
-        &
+        >, &
         <a class="underline" href="https://arabic-numbers.koljapluemer.com/"
           >Arabic Number Practice</a
         >.

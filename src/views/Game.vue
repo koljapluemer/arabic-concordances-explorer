@@ -1,31 +1,7 @@
 <script setup>
 import { ref, watch, computed, onMounted } from "vue";
-// import { supabase } from "@/lib/supabaseClient";
-import { createToaster } from "@meforma/vue-toaster";
 
-const toaster = createToaster({
-  position: "top-right",
-});
-
-const exercise = ref(null);
-const lastExercise = ref(null);
-const exercisesDoneThisSession = ref(0);
-const practiceExercisesDoneThisSession = ref(0);
-const streak = ref(0);
-const incorrectAnswerCounter = ref(0);
-const isRevealed = ref(false);
-const lastAnswerWasCorrect = ref(false);
-
-const gameMode = ref("undetermined");
 const currentlyPracticedSentence = ref(null);
-
-const countingDown = ref(false);
-const countdown = ref(3);
-
-const score = ref(0);
-const lastScore = ref(null);
-
-const timeoutId = ref(null);
 
 const explorationBreadcrumbs = ref([]);
 
@@ -58,11 +34,11 @@ watch(
 
 const sentencesTranslations = ref({});
 // load sentencesTranslations from localStorage (if they exist there)
-// if (localStorage.getItem("sentencesTranslations")) {
-//   sentencesTranslations.value = JSON.parse(
-//     localStorage.getItem("sentencesTranslations")
-//   );
-// }
+if (localStorage.getItem("sentencesTranslations")) {
+  sentencesTranslations.value = JSON.parse(
+    localStorage.getItem("sentencesTranslations")
+  );
+}
 
 // deep watcher for sentencesTranslations, saving to JSON
 watch(
@@ -76,20 +52,6 @@ watch(
   { deep: true }
 );
 
-// EXERCISES IMPORTER FROM BACKEND
-let exercises = [];
-// import data from "@/clozes.json";
-
-// for (const exercise of data["exercises"]) {
-//   exercise.sr = {
-//     repetitions: 0,
-//     interval: 10,
-//     due: Math.floor(new Date().getTime() / 1000),
-//   };
-//   exercise.practiceBucket = 0;
-//   exercise.stats = [];
-//   exercises.push(exercise);
-// }
 
 import corpusData from "@/corpus1.json";
 const initialCorpusSentences = corpusData["sentences"];
@@ -204,43 +166,6 @@ function exploreWord(word) {
   }
 }
 
-// async function translateRandomWord() {
-//   // pick any word from the current relevantCorpusSentences
-//   const randomCurrentSentence = relevantCorpusSentences.value[
-//     Math.floor(Math.random() * relevantCorpusSentences.value.length)
-//   ];
-//   const randomWord = splitSentence(randomCurrentSentence)[
-//     Math.floor(Math.random() * splitSentence(randomCurrentSentence).length)
-//   ];
-//   const res = await fetch("https://libretranslate.com/translate", {
-// 	method: "POST",
-// 	body: JSON.stringify({
-// 		q: randomWord,
-// 		source: "ar",
-// 		target: "en",
-// 		format: "text",
-// 		api_key: ""
-// 	}),
-// 	headers: { "Content-Type": "application/json" }
-// });
-
-// console.log(await res.json());
-// }
-
-async function sendDataToBackend(statsObj) {
-  // try {
-  //   const { data, error } = await supabase
-  //     .from("learning_data_cloze_sentences")
-  //     .insert([
-  //       {
-  //         user_uid: uid,
-  //         learning_result: JSON.stringify(statsObj),
-  //       },
-  //     ]);
-  // } catch (error) {
-  //   console.error(error);
-  // }
-}
 
 function splitSentence(sentence) {
   if (!sentence) return [];

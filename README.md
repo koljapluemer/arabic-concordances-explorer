@@ -1,18 +1,15 @@
 # Basic Arabic Sentences Tutor
 
-Practice essential Egyptian Arabic phrases. 
+Explore Arabic (MSA) with concordances.
 
 ![Screenshot of the app](app_screenshot.png)
 
 ## User Stories
 
-- [x] As a learner, I want to memorize relevant phrases to get by in Egypt in an efficient and fun way.
-- [x] As the programmer, I want to learn more about how sentence learning works best
-
+- [] As a learner, I want to practice Arabic reading.
 
 ## About
 
-What more can I say? A small web game to practice sentence useful for daily life in Egypt. Some gamification, some naive Spaced Repetition under the hood. Check it out [here](https://basic-arabic-sentences.koljapluemer.com/)
 
 ## Running / Contributing / Experimenting
 

@@ -1,7 +1,3 @@
-<script setup>
-// import Game from "./components/Game.vue";
-</script>
-
 <template>
   <main class="p-2 flex flex-col items-center flex-grow justify-center w-full">
     <router-view />

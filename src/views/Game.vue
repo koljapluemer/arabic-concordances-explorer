@@ -97,7 +97,6 @@ const allVocabSentences = initialCorpusSentences.filter(
     splitSentence(sentence).some((word) => vocab.includes(word)) &&
     splitSentence(sentence).length < 7
 );
-console.log(`overall found ${allVocabSentences.length} sentences with vocab`);
 
 const initialCorpusSentence = ref(null);
 
@@ -111,10 +110,6 @@ function getNewSentence() {
       Math.floor(Math.random() * unpracticedSentences.length)
     ];
 
-  console.log(`new sentence: ${initialCorpusSentence.value}`);
-  console.log(
-    `sentencesTranslations: ${JSON.stringify(sentencesTranslations.value)}`
-  );
   // if sentencesTranslations[initialCorpusSentence] does not exist, create it
 
   if (!sentencesTranslations.value[initialCorpusSentence.value]) {

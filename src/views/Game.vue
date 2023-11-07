@@ -74,7 +74,7 @@ const easySentences = initialCorpusSentences.filter(
 );
 
 // get sentences that are both easy and have a word from vocab.json
-import vocabData from "@/vocab.json";
+import vocabData from "@/words.json";
 const vocab = vocabData["words"];
 
 // make a list of obj to track stats for each vocab word

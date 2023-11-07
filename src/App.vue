@@ -15,7 +15,7 @@
     <div id="socials" class="mb-4 flex justify-center gap-2">
       <!-- Twitter Share Button -->
       <a
-        href="https://twitter.com/share?url=https://basic-arabic-sentences.koljapluemer.com"
+        href="https://twitter.com/share?url=https://arabic-concordances.koljapluemer.com"
         target="_blank"
         rel="noopener"
       >
@@ -24,7 +24,7 @@
 
       <!-- Reddit Share Button -->
       <a
-        href="https://www.reddit.com/submit?url=https://basic-arabic-sentences.koljapluemer.com"
+        href="https://www.reddit.com/submit?url=https://arabic-concordances.koljapluemer.com"
         target="_blank"
         rel="noopener"
       >
@@ -33,7 +33,7 @@
 
       <!-- Hacker News Share Button -->
       <a
-        href="https://news.ycombinator.com/submitlink?u=https://basic-arabic-sentences.koljapluemer.com"
+        href="https://news.ycombinator.com/submitlink?u=https://arabic-concordances.koljapluemer.com"
         target="_blank"
         rel="noopener"
       >

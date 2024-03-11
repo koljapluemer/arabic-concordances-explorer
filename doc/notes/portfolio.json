@@ -1,0 +1,21 @@
+{
+  "title": "Arabic Concordances Explorer",
+  "subtitle": "Data-Driven Arabic Practice",
+  "repo-name": "arabic-concordances-explorer",
+  "image": "concordances.png",
+  "imageAltProperty": "Screenshot of the project",
+  "shownAboveFold": false,
+  "status": "prototype",
+  "showOnPortfolio": true,
+  "languages": "en, eg",
+  "links": [
+    {
+      "title": "Visit",
+        "url": "https://arabic-concordances.koljapluemer.com/"
+    },
+    {
+      "title": "GitHub",
+      "url": "https://github.com/koljapluemer/arabic-concordances-explorer"
+    }
+  ]
+}

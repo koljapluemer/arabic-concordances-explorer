@@ -1,9 +1,11 @@
 # Basic Arabic Sentences Tutor
 
+![Project Image](/doc/img/project.png)
+
+
+
 Explore Arabic (MSA) with real corpus sentences and concordances. 
 
-
-![Screenshot of the app](app_screenshot.png)
 
 At this stage, it's maybe...a proof of concept? [Check it out here](https://arabic-concordances.koljapluemer.com/).
 
@@ -26,3 +28,10 @@ npm run dev
 ```
 
 If you have any questions, problems or bugs to report, kindly open an issue. Cheerz!
+
+## Gallery
+
+![Screenshot of Arabic-Concordances-Explorer](/doc/img/gallery/concordance_deet.png)
+
+
+![Screenshot of Arabic-Concordances-Explorer](/doc/img/gallery/concordances.png)

@@ -5,13 +5,13 @@
   "image": "concordances.png",
   "imageAltProperty": "Screenshot of the project",
   "shownAboveFold": false,
-  "status": "prototype",
+  "status": "alpha",
   "showOnPortfolio": true,
-  "languages": "en, eg",
+  "languages": ["en", "eg"],
   "links": [
     {
       "title": "Explore Concordances",
-        "url": "https://arabic-concordances.koljapluemer.com/"
+      "url": "https://arabic-concordances.koljapluemer.com/"
     },
     {
       "title": "GitHub",

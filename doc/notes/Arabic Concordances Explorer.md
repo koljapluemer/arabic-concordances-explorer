@@ -1,4 +1,4 @@
-
+- [[data-driven learning]] applied to [[learning arabic]]
 
 ## Possible Sources
 
@@ -8,3 +8,5 @@
 - [Arabic wikipedia](https://github.com/motazsaad/arwikiExtracts), comes with dump, corpus and instructions
 - [undocumented zip corpus](https://github.com/almoslmi/masc)
 - [Arabic Big Corpus](https://github.com/mohataher/arabic_big_corpus), which is not actually very big and may be exclusively Qran
+
+

@@ -52,6 +52,25 @@ watch(
   { deep: true }
 );
 
+const postTranslationNotes = ref({});
+// load postTranslationNotes from localStorage (if they exist there)
+if (localStorage.getItem("postTranslationNotes")) {
+  postTranslationNotes.value = JSON.parse(
+    localStorage.getItem("postTranslationNotes")
+  );
+}
+
+// deep watcher for postTranslationNotes, saving to JSON
+watch(
+  postTranslationNotes,
+  () => {
+    localStorage.setItem(
+      "postTranslationNotes",
+      JSON.stringify(postTranslationNotes.value)
+    );
+  },
+  { deep: true }
+);
 
 import corpusData from "@/corpus1.json";
 const initialCorpusSentences = corpusData["sentences"];
@@ -99,9 +118,10 @@ const allVocabSentences = initialCorpusSentences.filter(
 );
 
 const initialCorpusSentence = ref(null);
+const translationChecked = ref(false);
 
 function getNewSentence() {
-  
+  translationChecked.value = false;
   const unpracticedSentences = allVocabSentences.filter(
     (sentence) => !sentencesTranslations.value[sentence]
   );
@@ -161,10 +181,17 @@ function exploreWord(word) {
   }
 }
 
-
 function splitSentence(sentence) {
   if (!sentence) return [];
   return sentence.split(" ");
+}
+
+function checkTranslation() {
+  translationChecked.value = true;
+  // open in new tab: "`https://translate.google.com/?sl=ar&tl=en&text=${initialCorpusSentence}&op=translate`" :
+  window.open(
+    `https://translate.google.com/?sl=ar&tl=en&text=${initialCorpusSentence.value}&op=translate`
+  );
 }
 </script>
 
@@ -191,7 +218,7 @@ function splitSentence(sentence) {
 
       <div class="form-control my-4">
         <label class="input-group">
-          <span>Your translation attempt</span>
+          <span class="w-52">Your translation attempt</span>
           <input
             type="text"
             placeholder="..."
@@ -202,7 +229,7 @@ function splitSentence(sentence) {
       </div>
       <div class="form-control my-4">
         <label class="input-group">
-          <span>Notes</span>
+          <span class="w-52">Notes</span>
           <textarea
             placeholder="..."
             class="textarea input-bordered w-full"
@@ -211,12 +238,24 @@ function splitSentence(sentence) {
           ></textarea>
         </label>
       </div>
+      <div class="form-control my-4" v-if="translationChecked">
+        <label class="input-group">
+          <span class="w-52">Post-Translation-Notes</span>
+          <textarea
+            placeholder="Now that I've seen the translation, I..."
+            class="textarea input-bordered w-full"
+            rows="7"
+            v-model="postTranslationNotes[initialCorpusSentence]"
+          ></textarea>
+        </label>
+      </div>
+
       <div class="flex gap-2">
         <!-- translation for the sentence, only enabled when translation attempt has at least as many words as the arabic sentence -->
-        <a
+        <button
           target="_blank"
           class="btn"
-          :href="`https://translate.google.com/?sl=ar&tl=en&text=${initialCorpusSentence}&op=translate`"
+          @click="checkTranslation()"
           :class="
             splitSentence(initialCorpusSentence).length - 2 <=
               splitSentence(sentencesTranslations[initialCorpusSentence])
@@ -242,7 +281,7 @@ function splitSentence(sentence) {
               stroke-linejoin="round"
             ></path>
           </svg>
-        </a>
+        </button>
         <!-- button to get new sentence, same conditions -->
         <button
           class="btn"

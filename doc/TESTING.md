@@ -1,5 +1,3 @@
----
-aliases: 
-created-at: 11.03.2024
-q-type: 
----
+- currently, only manual testing can be done 
+    - there are also no 'units', so that's already out
+- possibly complication: the dataset feeding the exercises is huge and may be partly broken; that's hard to predict and test

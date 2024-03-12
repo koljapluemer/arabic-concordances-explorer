@@ -1,4 +1,5 @@
 - [[data-driven learning]] applied to [[learning arabic]]
+- [[Concordances]]-based tools are better done offline (→ [[godot]]), because you often need large amounts of data...
 
 ## Possible Sources
 

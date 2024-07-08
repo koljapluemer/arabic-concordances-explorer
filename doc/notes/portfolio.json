@@ -4,7 +4,7 @@
   "repo-name": "arabic-concordances-explorer",
   "image": "concordances.png",
   "imageAltProperty": "Screenshot of the project",
-  "shownAboveFold": false,
+  "showAboveFold": false,
   "status": "alpha",
   "showOnPortfolio": true,
   "languages": ["en", "eg"],

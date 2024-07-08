@@ -1,3 +1,11 @@
+---
+aliases:
+  - Disconnected thoughts on why my concordances tool is not fun to use
+---
+
+
+- [[blog backend]] for [[Blog/2023-11-07-concordances-lessons|2023-11-07-concordances-lessons]]
+
 - [[data-driven learning]] applied to [[learning arabic]]
 - [[Concordances]]-based tools are better done offline (→ [[godot]]), because you often need large amounts of data...
 

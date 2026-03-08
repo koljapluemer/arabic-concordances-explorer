@@ -9,9 +9,8 @@ Explore Arabic (MSA) with corpus-driven sentence practice and concordance-style 
 ## Tech Stack
 
 - Vue 3 + Vite 7
-- TypeScript 
-- Vue Router
-- Tailwind CSS v4 + daisyUI 
+- TypeScript
+- Tailwind CSS v4 + daisyUI
 
 ## Development
 

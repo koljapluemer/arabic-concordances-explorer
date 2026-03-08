@@ -1,1 +1,0 @@
-* the core game loop is boring. fix that.

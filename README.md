@@ -1,6 +1,6 @@
 # Basic Arabic Sentences Tutor
 
-![Project Image](/doc/img/project.png)
+![Project Image](/doc/screenshot.png)
 
 
 

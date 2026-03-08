@@ -1,1 +1,0 @@
-/home/b/MEGA/Obsidian/Main/Projects/Concordances.md

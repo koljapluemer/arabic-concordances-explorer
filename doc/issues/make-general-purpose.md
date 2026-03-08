@@ -1,15 +1,12 @@
----
-aliases:
-  - Disconnected thoughts on why my concordances tool is not fun to use
----
+# Make General Purpose
 
+consider other datasets, and other languages. Is this only boring because the dataset is boring?
 
-- [[blog backend]] for [[Blog/2023-11-07-concordances-lessons|2023-11-07-concordances-lessons]]
-
-- [[data-driven learning]] applied to [[learning arabic]]
-- [[Concordances]]-based tools are better done offline (→ [[godot]]), because you often need large amounts of data...
+Can also cross-polinate with `withvideos` paradigm or `infi`, kind of all the same idea...
 
 ## Possible Sources
+
+### Arabic
 
 - [Sinai Corpus](https://github.com/mohabmes/Sinai-corpus/blob/master/src/sample.txt): the first thing you find, but weird encoding, and I'm not sure how to use it (sparsely documented)
 - <https://github.com/linuxscout/tashkeela2/blob/master/data/Interviews/Int07.xml> seems like a decent amount of data (diverse topics), but it's spread out across folders and xml files which would need cleaning and merging

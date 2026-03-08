@@ -1,38 +1,26 @@
 {
-  "name": "arabic-pronounciation-tutor",
-  "version": "0.0.0",
+  "name": "arabic-concordances-explorer",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:unit": "vitest",
-    "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
-    "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'"
+    "typecheck": "vue-tsc --noEmit",
+    "check": "npm run typecheck && npm run build"
   },
   "dependencies": {
-    "@meforma/vue-toaster": "^1.3.0",
-    "@supabase/supabase-js": "^2.98.0",
-    "axios": "^1.13.6",
-    "d3-scale": "^4.0.2",
-    "dotenv": "^17.3.1",
-    "fsrs.js": "^1.2.2",
     "vue": "^3.5.29",
-    "vue-router": "^5.0.3",
-    "vue3-hotkey": "^1.0.6"
+    "vue-router": "^5.0.3"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.2.1",
+    "@types/node": "^25.3.5",
     "@vitejs/plugin-vue": "^6.0.4",
-    "@vue/test-utils": "^2.4.6",
-    "autoprefixer": "^10.4.27",
-    "cypress": "^15.11.0",
     "daisyui": "^5.5.19",
-    "jsdom": "^28.1.0",
-    "postcss": "^8.5.8",
-    "start-server-and-test": "^2.1.5",
     "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vitest": "^4.0.18",
-    "vue3-jest": "^27.0.0-alpha.1"
+    "vue-tsc": "^3.2.5"
   }
 }

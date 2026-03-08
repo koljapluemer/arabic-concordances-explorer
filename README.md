@@ -1,37 +1,34 @@
-# Basic Arabic Sentences Tutor
+# Arabic Concordances Explorer
 
 ![Project Image](/doc/screenshot.png)
 
+Explore Arabic (MSA) with corpus-driven sentence practice and concordance-style word exploration.
 
+**[Free Online App](https://concordances.koljasam.com/)**
 
-Explore Arabic (MSA) with real corpus sentences and concordances. 
+## Tech Stack
 
+- Vue 3 + Vite 7
+- TypeScript 
+- Vue Router
+- Tailwind CSS v4 + daisyUI 
 
-At this stage, it's maybe...a proof of concept? [Check it out here](https://arabic-concordances.koljapluemer.com/).
+## Development
 
-## User Stories
-
-- [x] As a learner, I want to practice Arabic reading comprehension and vocabulary.
-
-*Only sort of fulfilled. The core loop is to boring.*
-
-## About
-
-
-## Running / Contributing / Experimenting
-
-This a very simple Vue3 app. From `App.vue`, there is a router view pointing to `components/Game.vue`, where all the logic happens. Data is represented in various json files. To run it locally, clone the repository, make sure that you have everything installed to use Vue and run the following commands in the repository's directory:
-
-```
-npm i
+```bash
+npm install
 npm run dev
 ```
 
-If you have any questions, problems or bugs to report, kindly open an issue. Cheerz!
+## Quality Checks
 
-## Gallery
+```bash
+npm run typecheck
+npm run build
+npm run check
+```
 
-![Screenshot of Arabic-Concordances-Explorer](/doc/img/gallery/concordance_deet.png)
+## Notes
 
-
-![Screenshot of Arabic-Concordances-Explorer](/doc/img/gallery/concordances.png)
+- Main feature code lives in `src/views/Game.vue`.
+- Corpus data is stored in JSON files under `src/`.

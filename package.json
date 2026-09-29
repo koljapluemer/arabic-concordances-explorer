@@ -10,17 +10,17 @@
     "check": "npm run typecheck && npm run build"
   },
   "dependencies": {
-    "vue": "^3.5.29"
+    "vue": "^3.5.43"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.2.1",
-    "@types/node": "^25.3.5",
-    "@vitejs/plugin-vue": "^6.0.4",
-    "daisyui": "^5.5.19",
-    "tailwindcss": "^4.2.1",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.1",
-    "vue-tsc": "^3.2.5"
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.6.3",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "daisyui": "^5.7.46",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1",
+    "vue-tsc": "^3.3.11"
   },
   "engines": {
     "node": ">=20.19.0 <21 || >=22.12.0"
